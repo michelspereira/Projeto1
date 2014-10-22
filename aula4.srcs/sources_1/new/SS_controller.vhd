@@ -74,6 +74,7 @@ architecture rtl of SS_controller is
     signal valorAtual : integer range 0 to 9 := SS0_valor;
     -- Variavel que gaurda o display atual habilitado
     signal displayAtual : integer range 0 to 8 := 0;
+	variable displayAtual_var : integer range 0 to 8 := 0;
 begin
     
     an  <=  "11111110" when displayAtual = 0 else
@@ -102,11 +103,11 @@ begin
         if (rising_edge(clk)) then
             if (cnt=((fclk/f7s)/8)) then
                 cnt <= 0;
-                displayAtual <= displayAtual + 1;   
-                if (displayAtual=8) then
-                    displayAtual <=0;
+                displayAtual_var <= displayAtual_var + 1;   
+                if (displayAtual_var=8) then
+                    displayAtual_var <=0;
                 end if;
-                case displayAtual is
+                case displayAtual_var is
                     when 0 => valorAtual <= SS0_valor;
                     when 1 => valorAtual <= SS1_valor;
                     when 2 => valorAtual <= SS2_valor;
@@ -116,7 +117,8 @@ begin
                     when 6 => valorAtual <= SS6_valor;
                     when 7 => valorAtual <= SS7_valor;
                     when others => valorAtual <= SS0_valor;
-                end case;        
+                end case;   
+				displayAtual <= displayAtual_var;
             else
                 cnt <= cnt + 1;
             end if;
