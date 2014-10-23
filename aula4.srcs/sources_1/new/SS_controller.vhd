@@ -18,7 +18,6 @@
 -- 
 ----------------------------------------------------------------------------------
 
-
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.numeric_std.all;
@@ -73,9 +72,17 @@ architecture rtl of SS_controller is
     -- Variavel que gaurda o valor que devera ser mostrado no display atual
     signal valorAtual : integer range 0 to 9 := SS0_valor;
     -- Variavel que gaurda o display atual habilitado
-    signal displayAtual : integer range 0 to 8 := 0;
-	variable displayAtual_var : integer range 0 to 8 := 0;
+    signal displayAtual : integer range 0 to 7 := 0;
 begin
+    
+    valorAtual <=   SS0_valor when displayAtual = 0 else
+                    SS1_valor when displayAtual = 1 else
+                    SS2_valor when displayAtual = 2 else
+                    SS3_valor when displayAtual = 3 else
+                    SS4_valor when displayAtual = 4 else
+                    SS5_valor when displayAtual = 5 else
+                    SS6_valor when displayAtual = 6 else
+                    SS7_valor when displayAtual = 7;
     
     an  <=  "11111110" when displayAtual = 0 else
             "11111101" when displayAtual = 1 else
@@ -97,28 +104,16 @@ begin
             digito8 when valorAtual = 8 else
             digito9 when valorAtual = 9;
         
-        
     process (clk)
     begin
         if (rising_edge(clk)) then
             if (cnt=((fclk/f7s)/8)) then
                 cnt <= 0;
-                displayAtual_var <= displayAtual_var + 1;   
-                if (displayAtual_var=8) then
-                    displayAtual_var <=0;
+                if (displayAtual=7) then
+                    displayAtual <= 0;
+                else                  
+                    displayAtual <= displayAtual + 1;   
                 end if;
-                case displayAtual_var is
-                    when 0 => valorAtual <= SS0_valor;
-                    when 1 => valorAtual <= SS1_valor;
-                    when 2 => valorAtual <= SS2_valor;
-                    when 3 => valorAtual <= SS3_valor;
-                    when 4 => valorAtual <= SS4_valor;
-                    when 5 => valorAtual <= SS5_valor;
-                    when 6 => valorAtual <= SS6_valor;
-                    when 7 => valorAtual <= SS7_valor;
-                    when others => valorAtual <= SS0_valor;
-                end case;   
-				displayAtual <= displayAtual_var;
             else
                 cnt <= cnt + 1;
             end if;
